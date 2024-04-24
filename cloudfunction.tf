@@ -10,6 +10,7 @@ resource "google_project_service" "cb" {
   disable_on_destroy = true
 }
 
+
 resource "google_project_service" "ev" {
   project            = var.project_id
   service            = "eventarc.googleapis.com"
@@ -28,10 +29,17 @@ resource "google_service_account" "myaccount" {
   display_name = "My Service Account"
 }
 
-resource "google_project_iam_member" "signed-url" {
+resource "google_project_iam_member" "run_invoker" {
   project = var.project_id
-  role    = "roles/iam.serviceAccountTokenCreator"
-  member  = "serviceAccount:${google_service_account.myaccount.email}"
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${google_service_account.myaccount.account_id}@${var.project_id}.iam.gserviceaccount.com"
+}
+
+
+resource "google_project_iam_member" "storage_admin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.myaccount.account_id}@${var.project_id}.iam.gserviceaccount.com"
 }
 
 # Generates an archive of the source code compressed as a .zip file.
@@ -87,10 +95,10 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   event_trigger {
-    trigger_region        = var.region
-    event_type            = "google.cloud.storage.object.v1.finalized"
-    retry_policy          = "RETRY_POLICY_RETRY"
-    service_account_email = google_service_account.myaccount.email
+    trigger_region = var.region
+    event_type     = "google.cloud.storage.object.v1.finalized"
+    retry_policy   = "RETRY_POLICY_RETRY"
+    # service_account_email = google_service_account.myaccount.email
     event_filters {
       attribute = "bucket"
       value     = google_storage_bucket.input_bucket.name
