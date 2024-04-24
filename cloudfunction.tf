@@ -23,6 +23,7 @@ resource "time_sleep" "wait_30_seconds" {
 }
 
 resource "google_service_account" "myaccount" {
+  project      = var.project_id
   account_id   = "gen2-sa"
   display_name = "My Service Account"
 }
@@ -100,4 +101,13 @@ resource "google_cloudfunctions2_function" "function" {
     google_storage_bucket_object.zip,
     time_sleep.wait_30_seconds
   ]
+}
+
+
+resource "google_cloud_run_service_iam_member" "member" {
+  project  = var.project_id
+  location = google_cloudfunctions2_function.function.location
+  service  = google_cloudfunctions2_function.function.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
