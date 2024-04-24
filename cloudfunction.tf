@@ -27,6 +27,12 @@ resource "google_service_account" "myaccount" {
   display_name = "My Service Account"
 }
 
+resource "google_project_iam_member" "signed-url" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.myaccount.email}"
+}
+
 # Generates an archive of the source code compressed as a .zip file.
 data "archive_file" "source" {
   type        = "zip"
