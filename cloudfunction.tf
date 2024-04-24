@@ -95,10 +95,10 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   event_trigger {
-    trigger_region = var.region
-    event_type     = "google.cloud.storage.object.v1.finalized"
-    retry_policy   = "RETRY_POLICY_RETRY"
-    # service_account_email = google_service_account.myaccount.email
+    trigger_region        = var.region
+    event_type            = "google.cloud.storage.object.v1.finalized"
+    retry_policy          = "RETRY_POLICY_RETRY"
+    service_account_email = google_service_account.myaccount.email
     event_filters {
       attribute = "bucket"
       value     = google_storage_bucket.input_bucket.name
