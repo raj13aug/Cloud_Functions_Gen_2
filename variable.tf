@@ -22,6 +22,6 @@ variable "region" {
 
 variable "service_account_email" {
   type    = string
-  default = "gen2_sa@mytesting-400910.iam.gserviceaccount.com"
+  default = "gen2-sa@mytesting-400910.iam.gserviceaccount.com"
 
 }

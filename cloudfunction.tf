@@ -10,10 +10,21 @@ resource "google_project_service" "cb" {
   disable_on_destroy = true
 }
 
+resource "google_project_service" "ev" {
+  project            = var.project_id
+  service            = "eventarc.googleapis.com"
+  disable_on_destroy = true
+}
+
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [google_project_service.cf, google_project_service.cb]
+  depends_on = [google_project_service.cf, google_project_service.cb, google_project_service.ev]
 
   create_duration = "60s"
+}
+
+resource "google_service_account" "myaccount" {
+  account_id   = "gen2-sa"
+  display_name = "My Service Account"
 }
 
 # Generates an archive of the source code compressed as a .zip file.
