@@ -20,8 +20,7 @@ variable "region" {
   default     = "us-central1"
 }
 
-# variable "service_account_email" {
-#   type    = string
-#   default = "gen2-sa@mytesting-400910.iam.gserviceaccount.com"
-
-# }
+variable "service_account_email" {
+  type    = string
+  default = "gen2-sa@mytesting-400910.iam.gserviceaccount.com"
+}
